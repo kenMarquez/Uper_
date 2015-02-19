@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Uper</string>
+
+    <string name="title_section1">PROFILE</string>
+    <string name="title_section2">PAYMENT</string>
+    <string name="title_section3">PROMOTIONS</string>
+    <string name="title_section4">SHARE</string>
+    <string name="title_section5">SUPPORT</string>
+    <string name="title_section6">ABOUT</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_example">Example action</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_payment">Payment</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="ok">ENCENDER</string>
+    <string name="aply_code_promo">Enter Promo Code</string>
+    <string name="apply">APPLY</string>
+</resources>
