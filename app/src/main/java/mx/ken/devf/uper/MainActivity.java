@@ -1,23 +1,32 @@
 package mx.ken.devf.uper;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import mx.ken.devf.uper.Fragments.AutocompleteFragment;
+import mx.ken.devf.uper.Fragments.EjemploFragment;
 import mx.ken.devf.uper.Fragments.MapFragmentUper;
+import mx.ken.devf.uper.Fragments.PaymentFragment;
+import mx.ken.devf.uper.Fragments.ProfileFragment;
+import mx.ken.devf.uper.Fragments.PromotionsFragment;
+import mx.ken.devf.uper.Fragments.ShareFragment;
+import mx.ken.devf.uper.Fragments.SupportFragment;
 
 
 public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, EjemploFragment.OnFragmentInteractionListener, AutocompleteFragment.onAddressRecived {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -38,7 +47,6 @@ public class MainActivity extends ActionBarActivity
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
 
-        // Set up the drawer.
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
@@ -46,19 +54,54 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        // update the main content by replacing fragments
-        if (position == 0) {
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, new MapFragmentUper())
-                    .commit();
-            return;
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        switch (position) {
+            case 0:
+                transaction
+                        .replace(R.id.container, new MapFragmentUper(R.id.container, fragmentManager))
+                        .addToBackStack("map")
+                        .commit();
+                break;
+            case 1:
+                transaction
+                        .replace(R.id.container, ProfileFragment.newInstance("", ""))
+                        .addToBackStack("profile")
+                        .commit();
+                break;
+            case 2:
+                invalidateOptionsMenu();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, PaymentFragment.newInstance("", ""))
+                        .addToBackStack("map")
+                        .commit();
+                break;
+            case 3:
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, PromotionsFragment.newInstance("", ""))
+                        .addToBackStack("promotions")
+                        .commit();
+                break;
+            case 4:
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, ShareFragment.newInstance("", ""))
+                        .addToBackStack("share")
+                        .commit();
+                break;
+            case 5:
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, SupportFragment.newInstance("", ""))
+                        .addToBackStack("support")
+                        .commit();
+                break;
+            case 6:
+                fragmentManager.beginTransaction()
+                        //.replace(R.id.container, AboutFragment.newInstance("a", "al"))
+                        .replace(R.id.container, EjemploFragment.newInstance("arg1", "arg2"))
+                        .addToBackStack("about")
+                        .commit();
+                break;
         }
-
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                .commit();
     }
 
     public void onSectionAttached(int number) {
@@ -77,11 +120,21 @@ public class MainActivity extends ActionBarActivity
 
     public void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        //actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
     }
 
+    @Override
+    public void onBackPressed() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        if (fragmentManager.getBackStackEntryCount() > 1) {
+            fragmentManager.popBackStackImmediate();
+            fragmentManager.beginTransaction().commit();
+        } else if (fragmentManager.getBackStackEntryCount() <= 1) {
+            finish();
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -96,6 +149,7 @@ public class MainActivity extends ActionBarActivity
         return super.onCreateOptionsMenu(menu);
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -109,6 +163,20 @@ public class MainActivity extends ActionBarActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onFragmentInteraction(String cad) {
+        Log.i("myLog", "listener :" + cad);
+    }
+
+    @Override
+    public void onAddressLoaded(String recived) {
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        FragmentTransaction transaction = fragmentManager.beginTransaction();
+//        transaction
+//                .replace(R.id.container, MapFragmentUper.newInstance(recived, ""))
+//                .commit();
     }
 
     /**
@@ -150,5 +218,10 @@ public class MainActivity extends ActionBarActivity
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }
+
+    public void clicked(View view) {
+        Log.i("myLog", "clicked");
+    }
+
 
 }
